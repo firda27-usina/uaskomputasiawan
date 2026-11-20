@@ -324,26 +324,29 @@ label,
     color: #FFFFFF !important;
     font-weight: 700 !important;
 }
-
-/* KOTAK NOTIFIKASI BERHASIL */
-div[data-testid="stAlert"] {
-    background-color: #063B5C !important;
-    border: 1px solid #35D6CF !important;
-    border-left: 6px solid #35D6CF !important;
-    border-radius: 14px !important;
-}
-
-/* BAGIAN DALAM NOTIFIKASI */
-div[data-testid="stAlert"] [data-baseweb="notification"] {
-    background-color: #063B5C !important;
-    border-radius: 14px !important;
-}
-
-/* TULISAN NOTIFIKASI */
-div[data-testid="stAlert"] p {
+/* NOTIFIKASI FCR CUSTOM */
+.fcr-success {
+    background: #063B5C !important;
     color: #FFFFFF !important;
-    font-weight: 600 !important;
+    border: 1px solid #35D6CF;
+    border-left: 7px solid #35D6CF;
+    border-radius: 14px;
+    padding: 20px 24px;
+    margin: 15px 0 25px 0;
+    font-size: 17px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
 }
+
+.fcr-success span {
+    color: #35D6CF !important;
+    font-size: 23px;
+    font-weight: bold;
+}
+
 
 </style>
 
@@ -498,9 +501,12 @@ if st.button("🐟 HITUNG FCR", type="primary"):
     # 7. HASIL PERHITUNGAN
     # =================================================
 
-    st.success(
-        "Perhitungan FCR berhasil dilakukan!"
-    )
+    st.markdown("""
+        <div class="fcr-success">
+            <span>✓</span>
+            Perhitungan FCR berhasil dilakukan!
+        </div>
+        """, unsafe_allow_html=True)
 
     st.subheader("📊 Hasil Perhitungan")
 
