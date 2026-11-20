@@ -346,7 +346,21 @@ label,
     font-size: 23px;
     font-weight: bold;
 }
-
+/* WARNA TULISAN INTERPRETASI FCR */
+div[data-testid="stAlert"] p {
+    color: #111827 !important;
+    font-weight: 600 !important;
+}
+/* FOOTER AQUAFCR */
+.footer-aquafcr {
+    background-color: #FFFFFF !important;
+    color: #111827 !important;
+    padding: 22px;
+    border-radius: 12px;
+    font-size: 17px;
+    font-weight: 600;
+    margin-top: 25px;
+}
 
 </style>
 
@@ -621,6 +635,8 @@ if st.button("🐟 HITUNG FCR", type="primary"):
 
     st.divider()
 
-    st.success(
-        "Terima kasih telah menggunakan AquaFCR! 🐟"
-    )
+    st.markdown("""
+<div class="footer-aquafcr">
+    Terima kasih telah menggunakan AquaFCR! 🐟
+</div>
+""", unsafe_allow_html=True)
