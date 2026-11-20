@@ -325,6 +325,26 @@ label,
     font-weight: 700 !important;
 }
 
+/* KOTAK NOTIFIKASI BERHASIL */
+div[data-testid="stAlert"] {
+    background-color: #063B5C !important;
+    border: 1px solid #35D6CF !important;
+    border-left: 6px solid #35D6CF !important;
+    border-radius: 14px !important;
+}
+
+/* BAGIAN DALAM NOTIFIKASI */
+div[data-testid="stAlert"] [data-baseweb="notification"] {
+    background-color: #063B5C !important;
+    border-radius: 14px !important;
+}
+
+/* TULISAN NOTIFIKASI */
+div[data-testid="stAlert"] p {
+    color: #FFFFFF !important;
+    font-weight: 600 !important;
+}
+
 </style>
 
 <div class="fish-background">
