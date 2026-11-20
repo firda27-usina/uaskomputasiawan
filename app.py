@@ -99,43 +99,30 @@ animation_html = """
     font-size: 36px;
 }
 
-/* IKAN KE KANAN */
-.fish1 {
-    top: 15%;
-    left: -100px;
-    animation: swim-right 28s linear infinite;
+/* IKAN BERENANG KE KANAN */
+@keyframes swim-right {
+    0% {
+        transform: translateX(0) scaleX(-1);
+    }
+    50% {
+        transform: translateX(55vw) translateY(-18px) scaleX(-1);
+    }
+    100% {
+        transform: translateX(110vw) translateY(12px) scaleX(-1);
+    }
 }
 
-.fish2 {
-    top: 40%;
-    left: -100px;
-    font-size: 28px;
-    animation: swim-right 35s linear infinite;
-    animation-delay: -12s;
-}
-
-.fish3 {
-    top: 75%;
-    left: -100px;
-    font-size: 42px;
-    animation: swim-right 32s linear infinite;
-    animation-delay: -20s;
-}
-
-/* IKAN KE KIRI */
-.fish4 {
-    top: 28%;
-    right: -100px;
-    animation: swim-left 30s linear infinite;
-    animation-delay: -8s;
-}
-
-.fish5 {
-    top: 60%;
-    right: -100px;
-    font-size: 30px;
-    animation: swim-left 38s linear infinite;
-    animation-delay: -15s;
+/* IKAN BERENANG KE KIRI */
+@keyframes swim-left {
+    0% {
+        transform: translateX(0);
+    }
+    50% {
+        transform: translateX(-55vw) translateY(15px);
+    }
+    100% {
+        transform: translateX(-110vw) translateY(-12px);
+    }
 }
 
 /* ANIMASI IKAN */
