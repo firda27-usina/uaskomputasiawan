@@ -1,14 +1,10 @@
 
 import streamlit as st
+import base64
+from pathlib import Path
 
 # =====================================================
-# KONFIGURASI
-# =====================================================
-
-st.set_page_config(
-    
-# =====================================================
-# KONFIGURASI
+# 1. KONFIGURASI
 # =====================================================
 
 st.set_page_config(
@@ -18,50 +14,226 @@ st.set_page_config(
 )
 
 # =====================================================
-# DESAIN DAN WARNA APLIKASI
+# 2. MEMBACA GAMBAR BACKGROUND
 # =====================================================
 
-st.markdown("""
+
+image_path = Path(__file__).parent / "underwater.jpg"
+
+try:
+    encoded_image = base64.b64encode(
+        image_path.read_bytes()
+    ).decode("utf-8")
+
+    background_image = (
+        f'url("data:image/jpeg;base64,{encoded_image}")'
+    )
+
+except FileNotFoundError:
+    background_image = (
+        "linear-gradient(135deg, #38BFD5, #075985)"
+    )
+    st.warning("Gambar underwater.jpg tidak ditemukan.")
+
+except PermissionError:
+    st.error(
+        "Windows menolak akses gambar. "
+        "Periksa izin file underwater.jpg."
+    )
+    st.stop()
+
+
+# =====================================================
+# 3. BACKGROUND AQUA + ANIMASI IKAN
+# =====================================================
+
+animation_html = """
 <style>
 
-/* Background utama */
+/* BACKGROUND UTAMA */
 .stApp {
-    background: linear-gradient(
-        135deg,
-        #E0F7FA 0%,
-        #F0FDFA 50%,
-        #DBEAFE 100%
-    );
+    background: #B9F3F5 !important;
+    position: relative;
+    isolation: isolate;
 }
 
-/* Area konten */
+/* FOTO BAWAH LAUT */
+.stApp::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+
+    background-image:
+        linear-gradient(
+            rgba(0, 105, 140, 0.38),
+            rgba(0, 120, 150, 0.38)
+        ),
+        __BACKGROUND_IMAGE__;
+
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+
+    filter: blur(6px);
+    transform: scale(1.03);
+}
+
+/* LAPISAN ANIMASI */
+.fish-background {
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    pointer-events: none;
+    z-index: 0;
+}
+
+/* IKAN */
+.swimming-fish {
+    position: absolute;
+    white-space: nowrap;
+    opacity: 0.75;
+    font-size: 36px;
+}
+
+/* IKAN KE KANAN */
+.fish1 {
+    top: 15%;
+    left: -100px;
+    animation: swim-right 28s linear infinite;
+}
+
+.fish2 {
+    top: 40%;
+    left: -100px;
+    font-size: 28px;
+    animation: swim-right 35s linear infinite;
+    animation-delay: -12s;
+}
+
+.fish3 {
+    top: 75%;
+    left: -100px;
+    font-size: 42px;
+    animation: swim-right 32s linear infinite;
+    animation-delay: -20s;
+}
+
+/* IKAN KE KIRI */
+.fish4 {
+    top: 28%;
+    right: -100px;
+    animation: swim-left 30s linear infinite;
+    animation-delay: -8s;
+}
+
+.fish5 {
+    top: 60%;
+    right: -100px;
+    font-size: 30px;
+    animation: swim-left 38s linear infinite;
+    animation-delay: -15s;
+}
+
+/* ANIMASI IKAN */
+@keyframes swim-right {
+    0% {
+        transform: translateX(0);
+    }
+    50% {
+        transform: translateX(55vw) translateY(-18px);
+    }
+    100% {
+        transform: translateX(110vw) translateY(12px);
+    }
+}
+
+@keyframes swim-left {
+    0% {
+        transform: translateX(0) scaleX(-1);
+    }
+    50% {
+        transform: translateX(-55vw) translateY(15px) scaleX(-1);
+    }
+    100% {
+        transform: translateX(-110vw) translateY(-12px) scaleX(-1);
+    }
+}
+
+/* GELEMBUNG AIR */
+.bubble {
+    position: absolute;
+    bottom: -30px;
+    width: 12px;
+    height: 12px;
+    border: 2px solid rgba(255,255,255,0.8);
+    border-radius: 50%;
+    animation: bubble-up 12s linear infinite;
+}
+
+.bubble1 { left: 15%; }
+.bubble2 { left: 35%; animation-delay: 3s; }
+.bubble3 { left: 55%; animation-delay: 6s; }
+.bubble4 { left: 75%; animation-delay: 2s; }
+.bubble5 { left: 90%; animation-delay: 5s; }
+
+@keyframes bubble-up {
+    0% {
+        transform: translateY(0);
+        opacity: 0;
+    }
+    20% {
+        opacity: 0.8;
+    }
+    100% {
+        transform: translateY(-110vh);
+        opacity: 0;
+    }
+}
+
+/* KONTEN UTAMA */
 .block-container {
+    position: relative;
+    z-index: 1;
     padding-top: 2rem;
     padding-bottom: 3rem;
 }
 
-/* Judul utama */
+/* JUDUL */
 h1 {
     color: #075985 !important;
     font-weight: 800 !important;
 }
 
-/* Subjudul */
 h2, h3 {
     color: #0F766E !important;
     font-weight: 700 !important;
 }
 
-/* Metric */
+/* KARTU METRIK */
 [data-testid="stMetric"] {
-    background: white;
+    background: rgba(255,255,255,0.82);
+    backdrop-filter: blur(15px);
+    border: 1px solid rgba(255,255,255,0.7);
+    border-left: 5px solid #0891B2;
+    border-radius: 18px;
     padding: 20px;
-    border-radius: 15px;
-    border-left: 5px solid #0D9488;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+    box-shadow: 0 8px 25px rgba(0,60,90,0.12);
 }
 
-/* Tombol */
+/* INPUT */
+.stNumberInput input {
+    border-radius: 10px;
+}
+
+.stSelectbox div[data-baseweb="select"] {
+    border-radius: 10px;
+}
+
+/* TOMBOL */
 .stButton > button {
     background: linear-gradient(
         90deg,
@@ -76,49 +248,131 @@ h2, h3 {
     transition: 0.3s;
 }
 
-/* Efek tombol */
 .stButton > button:hover {
     background: #075985;
     color: white;
-    border: none;
     transform: scale(1.02);
 }
 
-/* Input */
-.stNumberInput input,
-.stSelectbox div[data-baseweb="select"] {
-    border-radius: 10px;
-}
-
-/* Pesan hasil */
+/* ALERT */
 [data-testid="stAlert"] {
     border-radius: 12px;
 }
 
-/* Garis pembatas */
+/* PEMBATAS */
 hr {
-    border-color: #99D5D8;
+    border-color: rgba(255,255,255,0.7);
+}
+
+.stApp {
+    background: transparent !important;
+}
+
+[data-testid="stAppViewContainer"] {
+    position: relative;
+    z-index: 1;
+}
+
+[data-testid="stMain"] {
+    position: relative;
+    z-index: 2;
+}
+
+h1, h2, h3 {
+    color: #FFFFFF !important;
+    text-shadow: 0 2px 8px rgba(0, 25, 45, 0.7);
+}
+
+p {
+    color: #E5F7FF !important;
+}
+
+label,
+[data-testid="stWidgetLabel"] p {
+    color: #FFFFFF !important;
+    font-weight: 600 !important;
+}
+
+[data-testid="stNumberInput"],
+[data-testid="stSelectbox"] {
+    border-radius: 12px;
+}
+
+[data-testid="stWidgetLabel"] {
+    text-shadow: 0 1px 5px rgba(0, 20, 40, 0.8);
+}
+
+/* KARTU HASIL PERHITUNGAN */
+[data-testid="stMetric"] {
+    background: rgba(4, 43, 65, 0.88) !important;
+    border: 1px solid rgba(53, 214, 207, 0.7);
+    border-left: 6px solid #35D6CF;
+    border-radius: 18px;
+    padding: 24px !important;
+    box-shadow: 0 5px 18px rgba(0, 0, 0, 0.2);
+}
+
+/* LABEL METRIK */
+[data-testid="stMetricLabel"],
+[data-testid="stMetricLabel"] p {
+    color: #BDEFFF !important;
+    font-weight: 600 !important;
+}
+
+/* ANGKA HASIL */
+[data-testid="stMetricValue"] {
+    color: #FFFFFF !important;
+    font-weight: 700 !important;
 }
 
 </style>
-""", unsafe_allow_html=True)
 
-    
+<div class="fish-background">
+
+    <div class="swimming-fish fish1">🐟</div>
+    <div class="swimming-fish fish2">🐠</div>
+    <div class="swimming-fish fish3">🐟</div>
+    <div class="swimming-fish fish4">🐠</div>
+    <div class="swimming-fish fish5">🐟</div>
+
+    <div class="bubble bubble1"></div>
+    <div class="bubble bubble2"></div>
+    <div class="bubble bubble3"></div>
+    <div class="bubble bubble4"></div>
+    <div class="bubble bubble5"></div>
+
+</div>
+"""
+
+animation_html = animation_html.replace(
+    "__BACKGROUND_IMAGE__",
+    background_image
 )
 
-st.title("🐟 Aplikasi Perhitungan Feed Conversion Ratio (FCR)")
+st.html(animation_html)
+
+# =====================================================
+# 4. HEADER APLIKASI
+# =====================================================
+
+st.title("🐟 AquaFCR")
+
+st.subheader(
+    "Aplikasi Perhitungan Feed Conversion Ratio"
+)
+
 st.write(
-    "Aplikasi untuk menghitung rasio konversi pakan "
-    "pada kegiatan budidaya ikan."
+    "Aplikasi untuk membantu menghitung dan mengevaluasi "
+    "efisiensi penggunaan pakan dalam kegiatan budidaya ikan."
 )
 
 st.divider()
 
 # =====================================================
-# INPUT DATA
+# 5. INPUT DATA BUDIDAYA
 # =====================================================
 
-st.subheader("Data Budidaya Ikan")
+st.subheader("📋 Data Budidaya Ikan")
 
 col1, col2 = st.columns(2)
 
@@ -176,65 +430,59 @@ with col2:
 st.divider()
 
 # =====================================================
-# PERHITUNGAN FCR
+# 6. PERHITUNGAN FCR
 # =====================================================
 
-if st.button("Hitung FCR", type="primary"):
+if st.button("🐟 HITUNG FCR", type="primary"):
 
-    # ---------------------------------------------
-    # Menghitung pertambahan biomassa
-    # ---------------------------------------------
+    pertambahan_biomassa = (
+        biomassa_akhir - biomassa_awal
+    )
 
-    pertambahan_biomassa = biomassa_akhir - biomassa_awal
-
-    # ---------------------------------------------
-    # Validasi data
-    # ---------------------------------------------
+    # VALIDASI DATA
 
     if biomassa_akhir <= biomassa_awal:
 
         st.error(
             "Biomassa akhir harus lebih besar "
-            "dari biomassa awal!"
+            "daripada biomassa awal!"
         )
 
         st.stop()
 
     if total_pakan <= 0:
 
-        st.error("Total pakan harus lebih dari 0 kg!")
+        st.error(
+            "Total pakan harus lebih dari 0 kg!"
+        )
 
         st.stop()
 
-    # ---------------------------------------------
-    # Menghitung nilai FCR
-    # ---------------------------------------------
+    # PERHITUNGAN
 
     fcr = total_pakan / pertambahan_biomassa
-
-    # ---------------------------------------------
-    # Menghitung rata-rata pertumbuhan
-    # ---------------------------------------------
 
     pertumbuhan_harian = (
         pertambahan_biomassa / lama_budidaya
     )
 
-    # ---------------------------------------------
-    # Menghitung rata-rata berat ikan
-    # ---------------------------------------------
+    berat_awal = (
+        biomassa_awal * 1000 / jumlah_ikan
+    )
 
-    berat_awal = biomassa_awal * 1000 / jumlah_ikan
-
-    berat_akhir = biomassa_akhir * 1000 / jumlah_ikan
+    berat_akhir = (
+        biomassa_akhir * 1000 / jumlah_ikan
+    )
 
     # =================================================
-    # HASIL PERHITUNGAN
+    # 7. HASIL PERHITUNGAN
     # =================================================
 
-    st.success("Perhitungan FCR berhasil dilakukan!")
+    st.success(
+        "Perhitungan FCR berhasil dilakukan!"
+    )
 
-    st.subheader("Hasil Perhitungan")
+    st.subheader("📊 Hasil Perhitungan")
 
     col1, col2 = st.columns(2)
 
@@ -268,16 +516,16 @@ if st.button("Hitung FCR", type="primary"):
     )
 
     # =================================================
-    # INTERPRETASI HASIL
+    # 8. INTERPRETASI FCR
     # =================================================
 
-    st.subheader("Interpretasi Nilai FCR")
+    st.subheader("🔎 Interpretasi Nilai FCR")
 
     if fcr <= 1.0:
 
         st.success(
-            "FCR sangat baik. Penggunaan pakan relatif "
-            "efisien berdasarkan pertambahan biomassa."
+            "FCR sangat baik. Penggunaan pakan "
+            "relatif efisien berdasarkan pertambahan biomassa."
         )
 
     elif fcr <= 1.5:
@@ -289,37 +537,64 @@ if st.button("Hitung FCR", type="primary"):
     elif fcr <= 2.0:
 
         st.info(
-            "FCR cukup baik. Penggunaan pakan masih "
-            "dapat ditingkatkan efisiensinya."
+            "FCR cukup baik. Efisiensi penggunaan "
+            "pakan masih dapat ditingkatkan."
         )
 
     else:
 
         st.warning(
-            "FCR kurang efisien. Perlu dilakukan evaluasi "
-            "terhadap pemberian pakan dan kondisi budidaya."
+            "FCR kurang efisien. Perlu evaluasi "
+            "pemberian pakan dan kondisi budidaya."
         )
 
+    st.caption(
+        "Catatan: Kategori interpretasi merupakan panduan umum. "
+        "Standar FCR dapat berbeda berdasarkan jenis ikan, "
+        "jenis pakan, dan sistem budidaya."
+    )
+
     # =================================================
-    # RINGKASAN DATA
+    # 9. RINGKASAN DATA
     # =================================================
 
     st.divider()
 
-    st.subheader("Ringkasan Data Budidaya")
+    st.subheader("📑 Ringkasan Data Budidaya")
 
     st.write(f"**Jenis Ikan:** {jenis_ikan}")
 
-    st.write(f"**Jumlah Ikan:** {jumlah_ikan} ekor")
+    st.write(
+        f"**Jumlah Ikan:** {jumlah_ikan} ekor"
+    )
 
-    st.write(f"**Total Pakan:** {total_pakan:.2f} kg")
+    st.write(
+        f"**Total Pakan:** {total_pakan:.2f} kg"
+    )
 
-    st.write(f"**Biomassa Awal:** {biomassa_awal:.2f} kg")
+    st.write(
+        f"**Biomassa Awal:** {biomassa_awal:.2f} kg"
+    )
 
-    st.write(f"**Biomassa Akhir:** {biomassa_akhir:.2f} kg")
+    st.write(
+        f"**Biomassa Akhir:** {biomassa_akhir:.2f} kg"
+    )
 
-    st.write(f"**Lama Budidaya:** {lama_budidaya} hari")
+    st.write(
+        f"**Pertambahan Biomassa:** "
+        f"{pertambahan_biomassa:.2f} kg"
+    )
 
-    st.write(f"**Nilai FCR:** {fcr:.2f}")
+    st.write(
+        f"**Lama Budidaya:** {lama_budidaya} hari"
+    )
 
-  
+    st.write(
+        f"**Nilai FCR:** {fcr:.2f}"
+    )
+
+    st.divider()
+
+    st.success(
+        "Terima kasih telah menggunakan AquaFCR! 🐟"
+    )
